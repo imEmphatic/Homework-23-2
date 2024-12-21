@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ product.image_preview | media_filter }}" class="img-fluid rounded" alt="{{ product.name }}">
+        </div>
+        <div class="col-md-6">
+            <h1 class="mb-3">{{ object.name }}</h1>
+            <p class="lead">{{ object.description }}</p>
+            <p>Просмотров: {{ object.views_counter }}</p>
+            <div class="mt-4">
+                <a class="btn btn-primary" href="{% url 'catalog:catalog_list' %}" role="button">Назад к списку</a>
+                <a class="btn btn-secondary" href="{% url 'catalog:catalog_update' object.pk %}" role="button">Редактировать</a>
+                <a class="btn btn-danger" href="{% url 'catalog:catalog_delete' object.pk %}" role="button">Удалить</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2>Версии продукта</h2>
+            <a href="{% url 'catalog:version_create' %}?product={{ object.pk }}" class="btn btn-success mb-3">Добавить версию</a>
+            <ul class="list-group">
+                {% for version in object.versions.all %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ version.version_name }} ({{ version.version_number }})
+                        {% if version.is_current %}
+                            <span class="badge bg-primary rounded-pill">Текущая</span>
+                        {% endif %}
+                        <div>
+                            <a href="{% url 'catalog:version_update' version.pk %}" class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                            <a href="{% url 'catalog:version_delete' version.pk %}" class="btn btn-sm btn-outline-danger">Удалить</a>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">Нет доступных версий.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

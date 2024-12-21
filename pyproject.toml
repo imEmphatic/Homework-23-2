@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "alex-homework"
+version = "1"
+description = "19_2 hmwrk"
+authors = ["Aleksei Prusikov <imemphatic@yandex.ru>"]
+license = "n"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^5.1"
+psycopg2 = "^2.9.9"
+binary = "^1.0.0"
+black = "^24.8.0"
+pillow = "^10.4.0"
+ipython = "^8.27.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
