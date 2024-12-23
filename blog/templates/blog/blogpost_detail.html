@@ -7,7 +7,7 @@
         <p>Дата создания: {{ post.created_at }}</p>
         <p>Просмотры: {{ post.views_count }}</p>
     </article>
-    <a href="{% url 'blog:post_update' post.slug %}">Редактировать</a>
-    <a href="{% url 'blog:post_delete' post.slug %}">Удалить</a>
+    <a href="{% url 'blog:post_update' post.pk %}">Редактировать</a>
+    <a href="{% url 'blog:post_delete' post.pk %}">Удалить</a>
     <a href="{% url 'blog:post_list' %}">Назад к списку</a>
 {% endblock %}
