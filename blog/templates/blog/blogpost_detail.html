@@ -1,13 +1,16 @@
 {% extends 'base.html' %}
 
-{% block content %}<article>
-        <h1>{{ post.title }}</h1>
-        <img src="{{ post.preview.url }}" alt="{{ post.title }}">
+{% block content %}
+<article>
+    <h1>{{ post.title }}</h1>
+    {% if post.preview %}
+    <img src="{{ post.preview.url }}" alt="{{ post.title }}">
+    {% endif %}
         <p>{{ post.content }}</p>
         <p>Дата создания: {{ post.created_at }}</p>
         <p>Просмотры: {{ post.views_count }}</p>
-    </article>
-    <a href="{% url 'blog:post_update' post.pk %}">Редактировать</a>
-    <a href="{% url 'blog:post_delete' post.pk %}">Удалить</a>
-    <a href="{% url 'blog:post_list' %}">Назад к списку</a>
+</article>
+<a href="{% url 'blog:post_update' post.pk %}">Редактировать</a>
+<a href="{% url 'blog:post_delete' post.pk %}">Удалить</a>
+<a href="{% url 'blog:post_list' %}">Назад к списку</a>
 {% endblock %}

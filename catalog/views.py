@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -45,11 +44,10 @@ class ProductDetailView(DetailView):
     context_object_name = "product"
 
     def get_object(self, queryset=None):
-        pk = self.kwargs.get(self.pk_url_kwarg)
-        obj = get_object_or_404(Product, pk=pk)
-        obj.views_counter += 1
-        obj.save()
-        return obj
+        post = super().get_object()
+        post.views_count += 1
+        post.save()
+        return post
 
 
 class ProductCreateView(CreateView):
