@@ -1,14 +1,15 @@
 from django.core.mail import send_mail
-from django.views.generic import (
-    ListView,
-    DetailView,
-    CreateView,
-    UpdateView,
-    DeleteView,
-)
-from django.urls import reverse_lazy, reverse
-from .models import BlogPost
+from django.urls import reverse, reverse_lazy
 from django.utils.text import slugify
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
+
+from .models import BlogPost
 
 
 class BlogPostListView(ListView):

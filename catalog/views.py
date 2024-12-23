@@ -1,16 +1,17 @@
 from django.contrib import messages
-from django.urls import reverse_lazy, reverse
-from django.views.generic import (
-    ListView,
-    DetailView,
-    CreateView,
-    UpdateView,
-    DeleteView,
-    TemplateView,
-)
 from django.shortcuts import get_object_or_404
-from .models import Product, Version
+from django.urls import reverse, reverse_lazy
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    TemplateView,
+    UpdateView,
+)
+
 from .forms import ProductForm, VersionForm
+from .models import Product, Version
 
 
 # Существующие классы остаются без изменений
