@@ -68,7 +68,6 @@ class Product(models.Model):
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
         ordering = ["name", "category"]
-        exclude = ["views_counter"]
 
     def __str__(self):
         return self.name
