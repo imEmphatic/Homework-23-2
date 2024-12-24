@@ -44,8 +44,8 @@ class ProductDetailView(DetailView):
     context_object_name = "product"
 
     def get_object(self, queryset=None):
-        post = super().get_object()
-        post.views_count += 1
+        post = super().get_object(queryset)
+        post.views_counter += 1
         post.save()
         return post
 
