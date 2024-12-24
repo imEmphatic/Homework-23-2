@@ -1,22 +1,23 @@
 [tool.poetry]
-name = "alex-homework"
-version = "1"
-description = "19_2 hmwrk"
+name = "homework-22-1"
+version = "0.1.0"
+description = ""
 authors = ["Aleksei Prusikov <imemphatic@yandex.ru>"]
-license = "n"
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-django = "^5.1"
-psycopg2 = "^2.9.9"
-binary = "^1.0.0"
-black = "^24.8.0"
-pillow = "^10.4.0"
-ipython = "^8.27.0"
-isort = "^5.13.2"
+django = "^5.1.4"
+psycopg2 = "^2.9.10"
+pillow = "^11.0.0"
+ipython = "^8.31.0"
 pytils = "^0.4.1"
 
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+isort = "^5.13.2"
+flake8 = "^7.1.1"
 
 [build-system]
 requires = ["poetry-core"]

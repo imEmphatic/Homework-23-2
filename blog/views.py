@@ -1,5 +1,5 @@
-from django.conf import settings  # Импортируем настройки
-from django.core.mail import send_mail
+# from django.conf import settings  # Импортируем настройки
+# from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
