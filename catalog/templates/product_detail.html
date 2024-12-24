@@ -8,7 +8,11 @@
         </div>
         <div class="col-md-6">
             <h1 class="mb-3">{{ object.name }}</h1>
-            <p class="lead">{{ object.description }}</p>
+            {% if product.description %}
+                <p class="lead">{{ product.description|lower }}</p>
+            {% else %}
+                <p class="lead">Описание отсутствует</p>
+            {% endif %}
             <p>Просмотров: {{ object.views_counter }}</p>
             <div class="mt-4">
                 <a class="btn btn-primary" href="{% url 'catalog:catalog_list' %}" role="button">Назад к списку</a>

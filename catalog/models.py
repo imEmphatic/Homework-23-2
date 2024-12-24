@@ -17,7 +17,6 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    objects = None
     name = models.CharField(
         max_length=50, verbose_name="Наименование", help_text="Введите наименование"
     )
@@ -72,8 +71,15 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        # Если описание None, устанавливаем пустую строку
+        if self.description is None:
+            self.description = ""
+        super(Product, self).save(*args, **kwargs)
+
 
 class Version(models.Model):
+    objects = None
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
