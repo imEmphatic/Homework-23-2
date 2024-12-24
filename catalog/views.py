@@ -19,7 +19,7 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["products"] = Product.objects.all()[:]
+        context["products"] = Product.objects.all()
         return context
 
 
@@ -34,6 +34,7 @@ class ProductListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         for product in context["object_list"]:
+            # Получаем текущую версию продукта
             product.active_version = product.versions.filter(is_current=True).first()
         return context
 
@@ -44,10 +45,11 @@ class ProductDetailView(DetailView):
     context_object_name = "product"
 
     def get_object(self, queryset=None):
-        post = super().get_object(queryset)
-        post.views_counter += 1
-        post.save()
-        return post
+        product = super().get_object(queryset)
+        # Увеличиваем счетчик просмотров
+        product.views_counter += 1
+        product.save()
+        return product
 
 
 class ProductCreateView(CreateView):
