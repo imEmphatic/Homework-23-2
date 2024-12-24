@@ -1,6 +1,7 @@
-# from django.conf import settings  # Импортируем настройки
-# from django.core.mail import send_mail
+from django.conf import settings
+from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
+from django.utils.text import slugify
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -8,7 +9,6 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
-from pytils.translit import slugify
 
 from .models import BlogPost
 
@@ -27,12 +27,27 @@ class BlogPostDetailView(DetailView):
     template_name = "blog/blogpost_detail.html"
     context_object_name = "post"
 
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        obj.views_count += 1
+
+        if obj.views_count == 100:
+            send_mail(
+                "Поздравляем с достижением!",
+                f'Статья "{obj.title}" достигла 100 просмотров!',
+                settings.DEFAULT_FROM_EMAIL,
+                ["aleksey.bedrinsky@yandex.ru"],
+                fail_silently=True,
+            )
+
+        obj.save()
+        return obj
+
 
 class BlogPostCreateView(CreateView):
     model = BlogPost
     template_name = "blog/blogpost_form.html"
     fields = ["title", "content", "preview", "is_published"]
-    success_url = reverse_lazy("blog:post_list")
 
     def form_valid(self, form):
         if form.is_valid():
@@ -48,7 +63,7 @@ class BlogPostUpdateView(UpdateView):
     fields = ["title", "content", "preview", "is_published"]
 
     def get_success_url(self):
-        return reverse("blog:post_detail", args=[self.object.pk])
+        return reverse("blog:post_detail", args=[self.object.slug])
 
 
 class BlogPostDeleteView(DeleteView):

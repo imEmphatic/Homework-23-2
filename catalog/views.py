@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -19,7 +20,7 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["products"] = Product.objects.all()
+        context["products"] = Product.objects.all()[:]
         return context
 
 
@@ -34,7 +35,6 @@ class ProductListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         for product in context["object_list"]:
-            # Получаем текущую версию продукта
             product.active_version = product.versions.filter(is_current=True).first()
         return context
 
@@ -45,11 +45,11 @@ class ProductDetailView(DetailView):
     context_object_name = "product"
 
     def get_object(self, queryset=None):
-        product = super().get_object(queryset)
-        # Увеличиваем счетчик просмотров
-        product.views_counter += 1
-        product.save()
-        return product
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        obj = get_object_or_404(Product, pk=pk)
+        obj.views_counter += 1
+        obj.save()
+        return obj
 
 
 class ProductCreateView(CreateView):
