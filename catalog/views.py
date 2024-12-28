@@ -47,7 +47,6 @@ class ProductDetailView(DetailView):
     def get_object(self, queryset=None):
         pk = self.kwargs.get(self.pk_url_kwarg)
         obj = get_object_or_404(Product, pk=pk)
-        obj.views_counter += 1
         obj.save()
         return obj
 
@@ -58,11 +57,25 @@ class ProductCreateView(CreateView):
     template_name = "product_form.html"
     success_url = reverse_lazy("catalog:catalog_list")
 
+    def form_valid(self, form):
+        if not form.cleaned_data.get("description"):
+            form.cleaned_data["description"] = (
+                "Описание отсутствует."  # Установка значения по умолчанию
+            )
+        return super().form_valid(form)
+
 
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
     template_name = "product_form.html"
+
+    def form_valid(self, form):
+        if not form.cleaned_data.get("description"):
+            form.cleaned_data["description"] = (
+                "Описание отсутствует."  # Установка значения по умолчанию
+            )
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse("catalog:catalog_detail", args=[self.kwargs.get("pk")])

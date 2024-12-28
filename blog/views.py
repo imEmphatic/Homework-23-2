@@ -36,7 +36,7 @@ class BlogPostDetailView(DetailView):
                 "Поздравляем с достижением!",
                 f'Статья "{obj.title}" достигла 100 просмотров!',
                 settings.DEFAULT_FROM_EMAIL,
-                ["aleksey.bedrinsky@yandex.ru"],
+                ["imemphatic@yandex.ru"],
                 fail_silently=True,
             )
 

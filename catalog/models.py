@@ -55,9 +55,7 @@ class Product(models.Model):
         verbose_name="Дата обновления",
         help_text="Дата последнего обновления",
     )
-    views_counter = models.PositiveIntegerField(
-        verbose_name="Счетчик просмотров", help_text="Количество просмотров", default=0
-    )
+
     manufactured_at = models.DateField(
         blank=True,
         verbose_name="Дата производства",
