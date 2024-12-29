@@ -2,7 +2,6 @@ from django.db import models
 
 
 class Category(models.Model):
-    objects = None
     name = models.CharField(max_length=100, verbose_name="Наименование категории")
     description = models.TextField(
         null=True, blank=True, verbose_name="Описание категории"
@@ -18,7 +17,6 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    objects = None
     name = models.CharField(
         max_length=50, verbose_name="Наименование", help_text="Введите наименование"
     )
@@ -44,8 +42,8 @@ class Product(models.Model):
         null=True,
         related_name="products",
     )
-    purchase_price = models.CharField(
-        max_length=50, verbose_name="Стоимость", help_text="Цена за покупку"
+    purchase_price = models.DecimalField(
+        max_digits=10, decimal_places=2, verbose_name="Стоимость", help_text="Цена за покупку"
     )
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name="Дата создания", help_text="Дата занесения в БД"
@@ -62,6 +60,7 @@ class Product(models.Model):
         help_text="Дата производства продукта",
         null=True,
     )
+    views_count = models.IntegerField(default=0, verbose_name="Количество просмотров")
 
     class Meta:
         verbose_name = "Продукт"
@@ -94,5 +93,5 @@ class Version(models.Model):
     def save(self, *args, **kwargs):
         if self.is_current:
             # Если эта версия отмечена как текущая, сбросим флаг у других версий этого продукта
-            Version.objects.filter(product=self.product).update(is_current=False)
+            Version.objects.filter(product=self.product).exclude(pk=self.pk).update(is_current=False)
         super().save(*args, **kwargs)

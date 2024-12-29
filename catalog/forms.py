@@ -58,6 +58,8 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
 
     def clean_field(self, field_name):
         data = self.cleaned_data[field_name]
+        if not data:  # Проверяем, если данные отсутствуют (пустое или None)
+            return data  # Возвращаем как есть (может быть None или пустая строка)
         forbidden_words = [
             "казино",
             "криптовалюта",
