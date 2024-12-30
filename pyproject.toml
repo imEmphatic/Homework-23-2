@@ -12,6 +12,7 @@ psycopg2 = "^2.9.10"
 pillow = "^11.0.0"
 ipython = "^8.31.0"
 pytils = "^0.4.1"
+six = "^1.17.0"
 
 
 [tool.poetry.group.dev.dependencies]

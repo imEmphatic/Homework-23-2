@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
@@ -6,7 +7,6 @@ from django.views.generic import (
     DeleteView,
     DetailView,
     ListView,
-    TemplateView,
     UpdateView,
 )
 
@@ -14,21 +14,7 @@ from .forms import ProductForm, VersionForm
 from .models import Product, Version
 
 
-# Существующие классы остаются без изменений
-class HomeView(TemplateView):
-    template_name = "home.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["products"] = Product.objects.all()[:]
-        return context
-
-
-class ContactsView(TemplateView):
-    template_name = "contacts.html"
-
-
-class ProductListView(ListView):
+class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = "product_list.html"
 
@@ -47,35 +33,22 @@ class ProductDetailView(DetailView):
     def get_object(self, queryset=None):
         pk = self.kwargs.get(self.pk_url_kwarg)
         obj = get_object_or_404(Product, pk=pk)
+        obj.views_count += 1
         obj.save()
         return obj
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = "product_form.html"
     success_url = reverse_lazy("catalog:catalog_list")
 
-    def form_valid(self, form):
-        if not form.cleaned_data.get("description"):
-            form.cleaned_data["description"] = (
-                "Описание отсутствует."  # Установка значения по умолчанию
-            )
-        return super().form_valid(form)
 
-
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = "product_form.html"
-
-    def form_valid(self, form):
-        if not form.cleaned_data.get("description"):
-            form.cleaned_data["description"] = (
-                "Описание отсутствует."  # Установка значения по умолчанию
-            )
-        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse("catalog:catalog_detail", args=[self.kwargs.get("pk")])
@@ -88,7 +61,7 @@ class ProductDeleteView(DeleteView):
 
 
 # Новые классы для работы с версиями
-class VersionCreateView(CreateView):
+class VersionCreateView(LoginRequiredMixin, CreateView):
     model = Version
     form_class = VersionForm
     template_name = "version_form.html"

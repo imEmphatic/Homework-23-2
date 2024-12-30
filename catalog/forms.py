@@ -47,6 +47,7 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
             "image_preview",
             "category",
             "purchase_price",
+            "views_count",
             "manufactured_at",
         ]
 
