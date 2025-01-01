@@ -3,7 +3,6 @@ from django.db import models
 
 
 class Category(models.Model):
-    objects = None
     name = models.CharField(max_length=100, verbose_name="Наименование категории")
     description = models.TextField(
         null=True, blank=True, verbose_name="Описание категории"
@@ -19,7 +18,6 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    objects = None
     name = models.CharField(
         max_length=50, verbose_name="Наименование", help_text="Введите наименование"
     )
@@ -67,7 +65,9 @@ class Product(models.Model):
         null=True,
     )
 
-    views_count = models.PositiveIntegerField(default=0, verbose_name="Количество просмотров")
+    views_count = models.PositiveIntegerField(
+        default=0, verbose_name="Количество просмотров"
+    )
 
     owner = models.ForeignKey(
         get_user_model(),
@@ -75,8 +75,7 @@ class Product(models.Model):
         related_name="products",
         verbose_name="Владелец",
         help_text="Пользователь, создавший продукт",
-        null=True,
-        blank=True,
+        default=1,
     )
 
     class Meta:
