@@ -8,7 +8,11 @@
     <p>Дата создания: {{ post.created_at }}</p>
     <p>Просмотры: {{ post.views_count }}</p>
 </article>
+
+{% if user.groups.all.0.name == 'Content Managers' %}
 <a href="{% url 'blog:post_update' post.slug %}">Редактировать</a>
 <a href="{% url 'blog:post_delete' post.slug %}">Удалить</a>
+{% endif %}
+
 <a href="{% url 'blog:post_list' %}">Назад к списку</a>
 {% endblock %}

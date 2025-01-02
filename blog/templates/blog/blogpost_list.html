@@ -7,7 +7,14 @@
     <h2><a href="{% url 'blog:post_detail' post.slug %}">{{ post.title }}</a></h2>
     <p>{{ post.content|truncatewords:30 }}</p>
     <p>Просмотры: {{ post.views_count }}</p>
+    <a href="{% url 'blog:post_detail' post.slug %}">Читать далее</a>
+    {% if user.groups.all.0.name == 'Content Managers' %}
+    <a href="{% url 'blog:post_update' post.slug %}">Редактировать</a>
+    <a href="{% url 'blog:post_delete' post.slug %}">Удалить</a>
+    {% endif %}
 </article>
 {% endfor %}
+{% if user.groups.all.0.name == 'Content Managers' %}
 <a href="{% url 'blog:post_create' %}">Создать новую запись</a>
+{% endif %}
 {% endblock %}
