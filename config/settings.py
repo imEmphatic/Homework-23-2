@@ -112,6 +112,8 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = "users.CustomUser"
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -178,4 +180,3 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = "imemphatic@yandex.ru"
 EMAIL_HOST_PASSWORD = "12345"
 DEFAULT_FROM_EMAIL = "imemphatic@yandex.ru"
-AUTH_USER_MODEL = "users.CustomUser"

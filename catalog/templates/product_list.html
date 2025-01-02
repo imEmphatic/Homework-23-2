@@ -22,10 +22,14 @@
                             <div class="btn-group">
                                 <a class="btn btn-sm btn-outline-secondary"
                                    href="{% url 'catalog:catalog_detail' product.pk %}">Просмотр</a>
+                                {% if user == product.owner or perms.catalog.change_product %}
                                 <a class="btn btn-sm btn-outline-primary"
                                    href="{% url 'catalog:catalog_update' product.pk %}">Редактировать</a>
+                                {% endif %}
+                                {% if user == product.owner or perms.catalog.delete_product %}
                                 <a class="btn btn-sm btn-outline-danger"
                                    href="{% url 'catalog:catalog_delete' product.pk %}">Удалить</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

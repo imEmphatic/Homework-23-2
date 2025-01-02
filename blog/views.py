@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
 from django.utils.text import slugify
@@ -49,6 +50,9 @@ class BlogPostCreateView(CreateView):
     template_name = "blog/blogpost_form.html"
     fields = ["title", "content", "preview", "is_published"]
 
+    def test_func(self):
+        return self.request.user.groups.filter(name="Content Managers").exists()
+
     def form_valid(self, form):
         if form.is_valid():
             new_blog = form.save(commit=False)
@@ -62,6 +66,9 @@ class BlogPostUpdateView(UpdateView):
     template_name = "blog/blogpost_form.html"
     fields = ["title", "content", "preview", "is_published"]
 
+    def test_func(self):
+        return self.request.user.groups.filter(name="Content Managers").exists()
+
     def get_success_url(self):
         return reverse("blog:post_detail", args=[self.object.slug])
 
@@ -70,3 +77,6 @@ class BlogPostDeleteView(DeleteView):
     model = BlogPost
     template_name = "blog/blogpost_confirm_delete.html"
     success_url = reverse_lazy("blog:post_list")
+
+    def test_func(self):
+        return self.request.user.groups.filter(name="Content Managers").exists()

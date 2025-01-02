@@ -1,9 +1,15 @@
 [tool.poetry]
-name = "homework-23-1"
+name = "Homework-23-1"
 version = "0.1.0"
 description = ""
 authors = ["Aleksei Prusikov <imemphatic@yandex.ru>"]
 readme = "README.md"
+packages = [
+    {include = "blog"},
+    {include = "catalog"},
+    {include = "config"},
+    {include = "users"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.12"
