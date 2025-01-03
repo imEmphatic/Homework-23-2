@@ -30,7 +30,7 @@ class BlogPostDetailView(DetailView):
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        obj.views_count += 1
+        obj.views_counter += 1
 
         if obj.views_count == 100:
             send_mail(

@@ -34,7 +34,7 @@ class ProductDetailView(DetailView):
     def get_object(self, queryset=None):
         pk = self.kwargs.get(self.pk_url_kwarg)
         obj = get_object_or_404(Product, pk=pk)
-        obj.views_count += 1
+        obj.views_counter += 1
         obj.save()
         return obj
 
@@ -51,19 +51,20 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = "product_form.html"
 
     def test_func(self):
         product = self.get_object()
+        # Проверка на владельца или наличие соответствующего права
         return self.request.user == product.owner or self.request.user.has_perm(
             "catalog.change_product"
         )
 
     def get_success_url(self):
-        return reverse("catalog:catalog_detail", args=[self.kwargs.get("pk")])
+        return reverse_lazy("catalog:catalog_detail", kwargs={"pk": self.object.pk})
 
     def handle_no_permission(self):
         messages.error(
@@ -72,10 +73,21 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         return redirect("catalog:catalog_detail", pk=self.kwargs.get("pk"))
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Product
     template_name = "product_confirm_delete.html"
     success_url = reverse_lazy("catalog:catalog_list")
+
+    def test_func(self):
+        product = self.get_object()
+        # Проверка на владельца или наличие соответствующего права
+        return self.request.user == product.owner or self.request.user.has_perm(
+            "catalog.delete_product"
+        )
+
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет прав для удаления этого продукта.")
+        return redirect("catalog:catalog_detail", pk=self.kwargs.get("pk"))
 
 
 # Новые классы для работы с версиями
@@ -97,10 +109,17 @@ class VersionCreateView(LoginRequiredMixin, CreateView):
         return reverse("catalog:catalog_detail", kwargs={"pk": self.object.product.pk})
 
 
-class VersionUpdateView(UpdateView):
+class VersionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Version
     form_class = VersionForm
     template_name = "version_form.html"
+
+    def test_func(self):
+        version = self.get_object()
+        # Проверка на владельца продукта или наличие соответствующего права
+        return self.request.user == version.product.owner or self.request.user.has_perm(
+            "catalog.change_version"
+        )
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -111,13 +130,28 @@ class VersionUpdateView(UpdateView):
         messages.error(self.request, "Пожалуйста, исправьте ошибки в форме.")
         return super().form_invalid(form)
 
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет прав для редактирования этой версии.")
+        return redirect("catalog:catalog_detail", pk=self.object.product.pk)
+
     def get_success_url(self):
         return reverse("catalog:catalog_detail", kwargs={"pk": self.object.product.pk})
 
 
-class VersionDeleteView(DeleteView):
+class VersionDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Version
     template_name = "version_confirm_delete.html"
+
+    def test_func(self):
+        version = self.get_object()
+        # Проверка на владельца продукта или наличие соответствующего права
+        return self.request.user == version.product.owner or self.request.user.has_perm(
+            "catalog.delete_version"
+        )
+
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет прав для удаления этой версии.")
+        return redirect("catalog:catalog_detail", pk=self.object.product.pk)
 
     def get_success_url(self):
         return reverse("catalog:catalog_detail", kwargs={"pk": self.object.product.pk})

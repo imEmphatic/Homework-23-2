@@ -65,7 +65,7 @@ class Product(models.Model):
         null=True,
     )
 
-    views_count = models.PositiveIntegerField(
+    views_counter = models.PositiveIntegerField(
         default=0,
         verbose_name="Количество просмотров",
         help_text="Количество просмотров",
@@ -77,7 +77,7 @@ class Product(models.Model):
         related_name="products",
         verbose_name="Владелец",
         help_text="Пользователь, создавший продукт",
-        default=1,
+        null=True,
     )
     PUBLICATION_STATUS_CHOICES = [
         ("draft", "Черновик"),
@@ -89,16 +89,6 @@ class Product(models.Model):
         default="draft",
         verbose_name="Статус публикации",
     )
-
-    class Meta:
-        verbose_name = "Продукт"
-        verbose_name_plural = "Продукты"
-        ordering = ["name", "category"]
-        permissions = [
-            ("can_unpublish_product", "Can unpublish product"),
-            ("can_change_product_description", "Can change product description"),
-            ("can_change_product_category", "Can change product category"),
-        ]
 
     def __str__(self):
         return self.name
