@@ -1,0 +1,44 @@
+[
+    {
+        "model": "auth.group",
+        "pk": 1,
+        "fields": {
+            "name": "Moderators"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 1,
+        "fields": {
+            "codename": "can_unpublish_product",
+            "name": "Can unpublish product",
+            "content_type": 1
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 2,
+        "fields": {
+            "codename": "can_change_product_description",
+            "name": "Can change product description",
+            "content_type": 1
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 3,
+        "fields": {
+            "codename": "can_change_product_category",
+            "name": "Can change product category",
+            "content_type": 1
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 1,
+        "fields": {
+            "name": "Moderators",
+            "permissions": [1, 2, 3]
+        }
+    }
+]

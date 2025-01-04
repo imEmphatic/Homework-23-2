@@ -90,6 +90,13 @@ class Product(models.Model):
         verbose_name="Статус публикации",
     )
 
+    class Meta:
+        permissions = [
+            ("can_unpublish_product", "Can unpublish product"),
+            ("can_change_product_description", "Can change product description"),
+            ("can_change_product_category", "Can change product category"),
+        ]
+
     def __str__(self):
         return self.name
 

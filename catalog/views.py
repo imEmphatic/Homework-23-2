@@ -46,7 +46,6 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("catalog:catalog_list")
 
     def form_valid(self, form):
-        # Указываем владельца продукта как текущего пользователя
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
@@ -56,11 +55,17 @@ class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     form_class = ProductForm
     template_name = "product_form.html"
 
+    def get_form_class(self):
+        if self.request.user.has_perm("catalog.can_change_product_description"):
+            return ProductForm  # Замените на форму с правами изменения описания
+        return ProductForm  # Базовая форма
+
     def test_func(self):
         product = self.get_object()
-        # Проверка на владельца или наличие соответствующего права
-        return self.request.user == product.owner or self.request.user.has_perm(
-            "catalog.change_product"
+        return self.request.user == product.owner or (
+            self.request.user.has_perm("catalog.can_unpublish_product")
+            and self.request.user.has_perm("catalog.can_change_product_description")
+            and self.request.user.has_perm("catalog.can_change_product_category")
         )
 
     def get_success_url(self):
@@ -80,9 +85,8 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         product = self.get_object()
-        # Проверка на владельца или наличие соответствующего права
         return self.request.user == product.owner or self.request.user.has_perm(
-            "catalog.delete_product"
+            "catalog.change_product"
         )
 
     def handle_no_permission(self):
@@ -116,7 +120,6 @@ class VersionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         version = self.get_object()
-        # Проверка на владельца продукта или наличие соответствующего права
         return self.request.user == version.product.owner or self.request.user.has_perm(
             "catalog.change_version"
         )
@@ -144,7 +147,6 @@ class VersionDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         version = self.get_object()
-        # Проверка на владельца продукта или наличие соответствующего права
         return self.request.user == version.product.owner or self.request.user.has_perm(
             "catalog.delete_version"
         )

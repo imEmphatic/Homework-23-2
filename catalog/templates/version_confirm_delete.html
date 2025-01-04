@@ -4,10 +4,14 @@
 <div class="container">
     <h1>Удалить версию</h1>
     <p>Вы уверены, что хотите удалить версию "{{ object }}"?</p>
+    {% if user == object.product.owner or perms.catalog.delete_version %}
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Удалить</button>
         <a href="{% url 'catalog:product_detail' object.product.pk %}" class="btn btn-secondary">Отмена</a>
     </form>
+    {% else %}
+    <p class="alert alert-danger">У вас нет прав для удаления этой версии.</p>
+    {% endif %}
 </div>
 {% endblock %}

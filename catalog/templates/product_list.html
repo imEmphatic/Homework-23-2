@@ -4,7 +4,9 @@
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
         <h1 class="mb-4">Список продуктов</h1>
+        {% if perms.catalog.add_product %}
         <a href="{% url 'catalog:catalog_create' %}" class="btn btn-success mb-3">Добавить новый продукт</a>
+        {% endif %}
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {% for product in object_list %}
             <div class="col">
