@@ -11,7 +11,7 @@ from django.views.generic import (
     UpdateView,
 )
 
-from .forms import ProductForm, VersionForm
+from .forms import DescriptionOnlyForm, FullProductForm, VersionForm
 from .models import Product, Version
 
 
@@ -41,7 +41,7 @@ class ProductDetailView(DetailView):
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
-    form_class = ProductForm
+    form_class = FullProductForm
     template_name = "product_form.html"
     success_url = reverse_lazy("catalog:catalog_list")
 
@@ -52,13 +52,14 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
 
 class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Product
-    form_class = ProductForm
+    form_class = FullProductForm
     template_name = "product_form.html"
 
     def get_form_class(self):
+        # Выбор формы на основе прав пользователя
         if self.request.user.has_perm("catalog.can_change_product_description"):
-            return ProductForm  # Замените на форму с правами изменения описания
-        return ProductForm  # Базовая форма
+            return DescriptionOnlyForm
+        return FullProductForm
 
     def test_func(self):
         product = self.get_object()

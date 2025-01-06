@@ -38,7 +38,7 @@ class VersionForm(StyleFormMixin, forms.ModelForm):
         return cleaned_data
 
 
-class ProductForm(StyleFormMixin, forms.ModelForm):
+class FullProductForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Product
         fields = [
@@ -61,6 +61,34 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
         data = self.cleaned_data[field_name]
         if not data:  # Проверяем, если данные отсутствуют (пустое или None)
             return data  # Возвращаем как есть (может быть None или пустая строка)
+        forbidden_words = [
+            "казино",
+            "криптовалюта",
+            "крипта",
+            "биржа",
+            "дешево",
+            "бесплатно",
+            "обман",
+            "полиция",
+            "радар",
+        ]
+
+        for word in forbidden_words:
+            if word in data.lower():
+                raise forms.ValidationError(
+                    f"Запрещенное слово '{word}' не может быть использовано."
+                )
+
+        return data
+
+
+class DescriptionOnlyForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ["description"]
+
+    def clean_description(self):
+        data = self.cleaned_data["description"]
         forbidden_words = [
             "казино",
             "криптовалюта",
