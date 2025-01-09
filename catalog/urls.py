@@ -1,38 +1,36 @@
-from django.conf import settings
-from django.conf.urls.static import static
 from django.urls import path
 
-from catalog.views import (
-    ProductCreateView,
-    ProductDeleteView,
-    ProductDetailView,
-    ProductListView,
-    ProductUpdateView,
-    VersionCreateView,
-    VersionDeleteView,
-    VersionUpdateView,
-)
+from . import views
 
 app_name = "catalog"
 
 urlpatterns = [
-    path("products/", ProductListView.as_view(), name="catalog_list"),
-    path("products/<int:pk>/", ProductDetailView.as_view(), name="catalog_detail"),
-    path("products/create/", ProductCreateView.as_view(), name="catalog_create"),
+    path("products/", views.ProductListView.as_view(), name="catalog_list"),
     path(
-        "products/<int:pk>/update/", ProductUpdateView.as_view(), name="catalog_update"
+        "products/<int:pk>/", views.ProductDetailView.as_view(), name="catalog_detail"
+    ),
+    path("products/create/", views.ProductCreateView.as_view(), name="catalog_create"),
+    path(
+        "products/<int:pk>/update/",
+        views.ProductUpdateView.as_view(),
+        name="catalog_update",
     ),
     path(
-        "products/<int:pk>/delete/", ProductDeleteView.as_view(), name="catalog_delete"
+        "products/<int:pk>/delete/",
+        views.ProductDeleteView.as_view(),
+        name="catalog_delete",
     ),
-    path("version/create/", VersionCreateView.as_view(), name="version_create"),
+    path("version/create/", views.VersionCreateView.as_view(), name="version_create"),
     path(
-        "version/<int:pk>/update/", VersionUpdateView.as_view(), name="version_update"
+        "version/<int:pk>/update/",
+        views.VersionUpdateView.as_view(),
+        name="version_update",
     ),
     path(
-        "version/<int:pk>/delete/", VersionDeleteView.as_view(), name="version_delete"
+        "version/<int:pk>/delete/",
+        views.VersionDeleteView.as_view(),
+        name="version_delete",
     ),
+    path("test-cache/", views.test_cache, name="test_cache"),
+    path("categories/", views.CategoryListView.as_view(), name="category_list"),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,7 +2,9 @@ from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
 from django.utils.text import slugify
+from django.views.decorators.cache import never_cache
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -30,14 +32,14 @@ class BlogPostDetailView(DetailView):
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        obj.views_counter += 1
+        obj.views_count += 1
 
         if obj.views_count == 100:
             send_mail(
                 "Поздравляем с достижением!",
                 f'Статья "{obj.title}" достигла 100 просмотров!',
                 settings.DEFAULT_FROM_EMAIL,
-                ["imemphatic@yandex.ru"],
+                ["aleksey.bedrinsky@yandex.ru"],
                 fail_silently=True,
             )
 
@@ -45,7 +47,8 @@ class BlogPostDetailView(DetailView):
         return obj
 
 
-class BlogPostCreateView(CreateView):
+@method_decorator(never_cache, name="dispatch")
+class BlogPostCreateView(UserPassesTestMixin, CreateView):
     model = BlogPost
     template_name = "blog/blogpost_form.html"
     fields = ["title", "content", "preview", "is_published"]
@@ -61,7 +64,7 @@ class BlogPostCreateView(CreateView):
         return super().form_valid(form)
 
 
-class BlogPostUpdateView(UpdateView):
+class BlogPostUpdateView(UserPassesTestMixin, UpdateView):
     model = BlogPost
     template_name = "blog/blogpost_form.html"
     fields = ["title", "content", "preview", "is_published"]
@@ -73,7 +76,7 @@ class BlogPostUpdateView(UpdateView):
         return reverse("blog:post_detail", args=[self.object.slug])
 
 
-class BlogPostDeleteView(DeleteView):
+class BlogPostDeleteView(UserPassesTestMixin, DeleteView):
     model = BlogPost
     template_name = "blog/blogpost_confirm_delete.html"
     success_url = reverse_lazy("blog:post_list")

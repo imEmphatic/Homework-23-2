@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div id="category-list-root"></div>
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    const categories = {{ categories|safe }};
+    ReactDOM.render(
+      React.createElement(CategoryList, { categories: categories }),
+      document.getElementById('category-list-root')
+    );
+  </script>
+{% endblock %}

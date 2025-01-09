@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "Homework-23-1"
+name = "Homework-23-2"
 version = "0.1.0"
 description = ""
 authors = ["Aleksei Prusikov <imemphatic@yandex.ru>"]
@@ -19,6 +19,11 @@ pillow = "^11.0.0"
 ipython = "^8.31.0"
 pytils = "^0.4.1"
 six = "^1.17.0"
+redis = "^5.2.1"
+python-dotenv = "^1.0.1"
+django-redis = "^5.4.0"
+psycopg2-binary = "^2.9.10"
+python-decouple = "^3.8"
 
 
 [tool.poetry.group.dev.dependencies]

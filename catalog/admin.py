@@ -5,18 +5,10 @@ from catalog.models import Category, Product, Version
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "name",
-        "purchase_price",
-        "category",
-        "publication_status",
-        "description",
-    )
+    list_display = ("id", "name", "purchase_price", "category", "publication_status")
     list_filter = ("category", "publication_status")
     search_fields = ("name", "description")
     readonly_fields = ("views_counter", "created_at", "updated_at")
-    permissions = ["catalog.change_product"]
 
     def get_readonly_fields(self, request, obj=None):
         if obj and not request.user.has_perm("catalog.can_change_product_description"):
